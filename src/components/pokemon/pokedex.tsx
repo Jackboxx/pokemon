@@ -14,7 +14,7 @@ export type Generation = {
     pokemon_species: PokemonEntry[];
 };
 
-export function Pokedex({ generation, teamIds }: { generation: number, teamIds: number[] }) {
+export function Pokedex({ generation, onClick, teamIds }: { generation: number, onClick: (name: string, index: number, position: number) => void, teamIds: number[] }) {
     const [pokedex, setPokedex] = useState<Generation | undefined>(undefined);
 
     const fetchPokemon = async () => {
@@ -51,7 +51,9 @@ export function Pokedex({ generation, teamIds }: { generation: number, teamIds: 
                     name: p.name,
                     isInTeam: teamIds.includes(index),
                     index: index,
-                }} key={i} />)
+                }}
+                    onClick={onClick}
+                    key={i} />)
             })}
         </div>
     );
