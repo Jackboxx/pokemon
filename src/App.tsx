@@ -54,10 +54,15 @@ export function App() {
           teamSize={TEAM_SIZE}
           onConfirm={(name: string, index: number, position: number) => {
             const member = { name, index };
+            const actualPosition = Math.max(
+              Math.min(position, 0),
+              TEAM_SIZE - 1
+            );
+
             const teamArray = [
-              ...team.slice(0, position),
+              ...team.slice(0, actualPosition),
               member,
-              ...team.slice(position + 1),
+              ...team.slice(actualPosition + 1),
             ];
             localStorage.setItem('team', JSON.stringify(teamArray));
             setTeam(teamArray);
