@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BasicButton } from "./components/buttons/basicButton";
 import { Pokedex } from "./components/pokemon/pokedex";
 import { Team } from "./components/pokemon/team";
+import { Member } from "./components/pokemon/teamMember";
 import { MemberPopup } from "./components/popups/memberPopup";
 
 const GENERATION_COUNT = 9;
@@ -9,7 +10,7 @@ const TEAM_SIZE = 6;
 
 export function App() {
     const [generation, setGeneration] = useState(1);
-    const [team, setTeam] = useState([...Array(TEAM_SIZE).fill({ name: '', index: 0 })])
+    const [team, setTeam] = useState<Member[]>(JSON.parse(localStorage.getItem('team') ?? 'null') ?? [...Array(TEAM_SIZE).fill({ name: '', index: 0 })])
     const [popupShown, setPopupShown] = useState(false);
     const [popupInitialName, setPopupInitialName] = useState('');
     const [popupPokemonIndex, setPopupPokemonIndex] = useState(0);
@@ -45,7 +46,9 @@ export function App() {
                 teamSize={TEAM_SIZE}
                 onConfirm={(name: string, index: number, position: number) => {
                     const member = { name, index }
-                    setTeam([...team.slice(0, position), member, ...team.slice(position + 1)])
+                    const teamArray = [...team.slice(0, position), member, ...team.slice(position + 1)];
+                    localStorage.setItem('team', JSON.stringify(teamArray));
+                    setTeam(teamArray)
                     setPopupShown(false);
                 }}
             />}
