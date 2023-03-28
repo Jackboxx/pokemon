@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BasicButton } from "./components/buttons/basicButton";
 import { Pokedex } from "./components/pokemon/pokedex";
 import { Team } from "./components/pokemon/team";
+import { MemberPopup } from "./components/popups/memberPopup";
 
 const GENERATION_COUNT = 9;
 const TEAM_SIZE = 6;
@@ -9,6 +10,9 @@ const TEAM_SIZE = 6;
 export function App() {
     const [generation, setGeneration] = useState(1);
     const [team, setTeam] = useState([...Array(TEAM_SIZE).fill({ name: '', index: 0 })])
+    const [popupShown, setPopupShown] = useState(false);
+    const [popupInitialName, setPopupInitialName] = useState('');
+    const [popupPokemonIndex, setPopupPokemonIndex] = useState(0);
 
     return (
         <div className="h-screen max-h-screen flex flex-col bg-neutral-700">
@@ -25,11 +29,26 @@ export function App() {
                     />)}
             </div>
             <div className="h-3/6">
-                <Pokedex generation={generation} onClick={(name: string, index: number, position: number) => {
+                <Pokedex
+                    generation={generation}
+                    onClick={(name: string, index: number) => {
+                        setPopupShown(true);
+                        setPopupInitialName(name);
+                        setPopupPokemonIndex(index)
+                    }}
+                    teamIds={team.map(member => member.index)}
+                />
+            </div>
+            {popupShown && <MemberPopup
+                initialName={popupInitialName}
+                memberIndex={popupPokemonIndex}
+                teamSize={TEAM_SIZE}
+                onConfirm={(name: string, index: number, position: number) => {
                     const member = { name, index }
                     setTeam([...team.slice(0, position), member, ...team.slice(position + 1)])
-                }} teamIds={team.map(member => member.index)} />
-            </div>
+                    setPopupShown(false);
+                }}
+            />}
         </div>
     );
 }

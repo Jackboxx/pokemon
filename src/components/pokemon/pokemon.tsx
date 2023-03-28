@@ -4,12 +4,11 @@ export type Pokemon = {
     index: number;
 }
 
-export function Pokemon({ pokemon, onClick }: { pokemon: Pokemon, onClick: (name: string, index: number, position: number) => void }) {
+export function Pokemon({ pokemon, onClick }: { pokemon: Pokemon, onClick: (name: string, index: number) => void }) {
     const { index, name, isInTeam } = pokemon;
     const fullName = firstLetterToUpper(name);
-    const rand = Math.floor(Math.random() * 6);
     return (
-        <div onClick={() => onClick(fullName, index, rand)} className="relative flex justify-center items-center duration-200">
+        <div onClick={() => onClick(fullName, index)} className="relative flex justify-center items-center duration-200">
             <img
                 className="m-4 flex min-h-[145px] min-w-[145px] lg:min-h-[200px] lg:min-w-[200px] z-10 peer hover:opacity-30 
             rounded-xl border-4 border-purple-500 bg-neutral-600 p-2 text-xl text-white"
