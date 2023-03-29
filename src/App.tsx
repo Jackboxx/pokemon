@@ -52,10 +52,11 @@ export function App() {
           initialName={popupInitialName}
           memberIndex={popupPokemonIndex}
           teamSize={TEAM_SIZE}
+          onCancel={() => setPopupShown(false)}
           onConfirm={(name: string, index: number, position: number) => {
             const member = { name, index };
-            const actualPosition = Math.max(
-              Math.min(position, 0),
+            const actualPosition = Math.min(
+              Math.max(position, 0),
               TEAM_SIZE - 1
             );
 

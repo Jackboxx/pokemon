@@ -1,68 +1,69 @@
 import { useState } from 'react';
 import { BasicButton } from '../buttons/basicButton';
-// <div className="relative h-10 w-full min-w-[200px]">
-//   <input
-//     className="border-blue-gray-200 text-blue-gray-700 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full rounded-[7px] border border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal outline outline-0 transition-all placeholder-shown:border focus:border-2 focus:border-purple-500 focus:border-t-transparent focus:outline-0 disabled:border-0"
-//     placeholder=" "
-//     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//       setName(e.target.value)
-//     }
-//   />
-//   <label className="before:content[' '] after:content[' '] text-blue-gray-400 before:border-blue-gray-200 after:border-blue-gray-200 peer-placeholder-shown:text-blue-gray-500 peer-disabled:peer-placeholder-shown:text-blue-gray-500 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-purple-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-purple-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-purple-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent">
-//     Nickname
-//   </label>
-// </div>
 
 export function MemberPopup({
   initialName,
   memberIndex,
   teamSize,
   onConfirm,
+  onCancel,
 }: {
   initialName: string;
   memberIndex: number;
   teamSize: number;
   onConfirm: (name: string, index: number, position: number) => void;
+  onCancel: () => void;
 }) {
   const [name, setName] = useState(initialName);
   const [position, setPosition] = useState(1);
   return (
-    <div className="fixed z-50 flex h-screen w-screen items-center justify-center bg-neutral-800">
-      <div className="m-12 flex min-w-[400px] flex-col gap-6 rounded-xl bg-neutral-700 p-8 text-lg text-white opacity-100">
-        <div className="flex justify-center">
-          <div className="relative mb-3 xl:w-96" data-te-input-wrapper-init>
-            <input
-              type="text"
+    <>
+      <div className="blur-6xl fixed z-40 flex h-screen w-screen items-center justify-center bg-neutral-800 opacity-80" />
+      <div className="fixed z-50 flex h-screen w-screen items-center justify-center">
+        <div className="m-12 flex min-w-[400px] flex-col gap-6 rounded-xl bg-neutral-700 p-8 text-lg text-white opacity-100">
+          <div className="flex justify-center">
+            <div className="relative mb-3 w-full xl:w-96">
+              <input
+                type="text"
+                className="min-h-[auto] w-full rounded border-[1px] bg-neutral-700 p-2 outline-none focus:border-purple-500"
+                id="nickName"
+                placeholder="Nickname..."
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
+              />
+            </div>
+          </div>
+          <div className="relative h-10 w-full min-w-[200px]">
+            <select
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setPosition(+e.target.value)
+              }
               className="min-h-[auto] w-full rounded border-[1px] bg-neutral-700 p-2 outline-none focus:border-purple-500"
-              id="nickName"
-              placeholder="Nickname..."
+            >
+              {[...Array(teamSize)].map((_, i) => (
+                <option key={i}>{i + 1}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex h-full items-center justify-between">
+            <span className="text-4xl">{name}</span>
+            <img
+              className="h-full"
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${memberIndex}.png`}
             />
           </div>
-        </div>
-        <div className="relative h-10 w-full min-w-[200px]">
-          <input
-            className="min-h-[auto] w-full rounded border-[1px] bg-neutral-700 p-2 outline-none focus:border-purple-500"
-            placeholder="Position in Team..."
-            type={'number'}
-            min={1}
-            max={teamSize}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPosition(+e.target.value)
-            }
+          <BasicButton
+            text="Confirm"
+            onClick={() => onConfirm(name, memberIndex, position - 1)}
+          />
+          <BasicButton
+            text="Cancel"
+            classes="rounded-lg bg-gradient-to-bl from-red-600 to-red-500 "
+            onClick={onCancel}
           />
         </div>
-        <div className="flex h-full items-center justify-between">
-          <span className="text-4xl">{name}</span>
-          <img
-            className="h-full"
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${memberIndex}.png`}
-          />
-        </div>
-        <BasicButton
-          text="Confirm"
-          onClick={() => onConfirm(name, memberIndex, position - 1)}
-        />
       </div>
-    </div>
+    </>
   );
 }
